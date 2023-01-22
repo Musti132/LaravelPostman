@@ -173,6 +173,8 @@ class ExportRoutesCommand extends Command
 
         $this->info('Creating item: ' . $name);
 
+        $isFormDataOrUrlEncoded = ($route->methods[0] == 'PUT' || $route->methods[0] == 'PATCH') ? 'urlencoded' : 'formdata';
+
         // Create the item structure
         $item = [
             'name' => $name,
@@ -180,8 +182,8 @@ class ExportRoutesCommand extends Command
                 'method' => $route->methods[0],
                 'header' => [],
                 'body' => [
-                    'mode' => 'formdata',
-                    'formdata' => [],
+                    'mode' => $isFormDataOrUrlEncoded,
+                    $isFormDataOrUrlEncoded => [],
                 ],
                 'url' => [
                     'raw' => "{{app_url}}" . $route->uri,
@@ -198,7 +200,7 @@ class ExportRoutesCommand extends Command
 
         // Add FormRequest fields to postman item
         if ($formdata != null) {
-            $item['request']['body']['formdata'] = $formdata;
+            $item['request']['body'][$isFormDataOrUrlEncoded] = $formdata;
         }
 
         return $item;
