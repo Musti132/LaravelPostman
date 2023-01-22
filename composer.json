@@ -1,0 +1,19 @@
+{
+    "name": "musti/laravel-postman",
+    "description": "Laravel API to postman collection",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Musti\\LaravelPostman\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Musti",
+            "email": "44943708+Musti132@users.noreply.github.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
