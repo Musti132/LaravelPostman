@@ -87,7 +87,7 @@ class ExportRoutesCommand extends Command
         $this->config = $config['laravel-postman'];
     }
 
-    public function handle()
+    public function handle() : void
     {
         if (!empty($this->config['ignored_routes']) && is_array($this->config['ignored_routes'])) {
             $this->ignoredRoutes = array_merge($this->ignoredRoutes, $this->config['ignored_routes']);
@@ -156,7 +156,7 @@ class ExportRoutesCommand extends Command
         return true;
     }
 
-    private function isIgnoredRoute($route) {
+    private function isIgnoredRoute($route) : bool{
         foreach ($this->ignoredRoutes as $ignoredRoute) {
             return (fnmatch($ignoredRoute, $route));
         }
@@ -215,7 +215,7 @@ class ExportRoutesCommand extends Command
         return $item;
     }
 
-    private function checkIfControllerMethodHasFormRequest(string $controller, string $method)
+    private function checkIfControllerMethodHasFormRequest(string $controller, string $method) : ?array
     {
         $formRequest = null;
 
@@ -248,7 +248,7 @@ class ExportRoutesCommand extends Command
         return $formData;
     }
 
-    private function createFormDataFromFormRequest($formRequest)
+    private function createFormDataFromFormRequest($formRequest) : ?array
     {
         $formRequest = new $formRequest;
 
@@ -271,7 +271,7 @@ class ExportRoutesCommand extends Command
         return $formData;
     }
 
-    private function createPostmanStructure()
+    private function createPostmanStructure() : array
     {
         $port = $this->config['port'] != null ? ":" . $this->config['port'] : null;
 
@@ -331,7 +331,7 @@ class ExportRoutesCommand extends Command
         return true;
     }
 
-    private function convertToPostmanItem($directory)
+    private function convertToPostmanItem($directory) : array
     {
         $items = [];
         foreach ($directory as $name => $item) {
