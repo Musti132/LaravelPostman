@@ -14,14 +14,12 @@ class LaravelPostmanServiceProvider extends ServiceProvider {
         */
         public function boot() {
             if ($this->app->runningInConsole()) {
-                $this->commands([
-                    ExportRoutesCommand::class,
-                ]);
+                $this->commands(ExportRoutesCommand::class,);
             }
 
             $this->publishes([
                 __DIR__ . '/../config/laravel-postman.php' => config_path('laravel-postman.php'),
-            ], 'config');
+            ], 'laravel-postman-config');
         }
     
         /**

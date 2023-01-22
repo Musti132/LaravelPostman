@@ -92,7 +92,7 @@ class ExportRoutesCommand extends Command
         $this->config = $config['laravel-postman'];
     }
 
-    private function handle()
+    public function handle()
     {
         if (!empty($this->config['ignored_routes']) && is_array($this->config['ignored_routes'])) {
             $this->ignoredRoutes = array_merge($this->ignoredRoutes, $this->config['ignored_routes']);

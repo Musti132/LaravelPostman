@@ -15,7 +15,7 @@ Install via composer
  ```
  Export config file
 ```bash
-php artisan vendor:publish --provider="Musti/LaravelPostman/LaravelPostmanServiceProvider" --tag="config"
+php artisan vendor:publish --tag=laravel-postman-config
 ```
 
 ### Usage
