@@ -3,6 +3,12 @@
     "description": "Laravel API to postman collection",
     "type": "library",
     "license": "MIT",
+    "keywords": [
+        "laravel",
+        "api",
+        "postman",
+        "collection"
+    ],
     "autoload": {
         "psr-4": {
             "Musti\\LaravelPostman\\": "src/"
@@ -15,5 +21,13 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Musti\\LaravelPostman\\LaravelPostmanServiceProvider"
+            ]
+        }
+    },
     "require": {}
 }
