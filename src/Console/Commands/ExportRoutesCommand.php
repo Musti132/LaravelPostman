@@ -92,7 +92,7 @@ class ExportRoutesCommand extends Command
         $this->config = $config['laravel-postman'];
     }
 
-    public function handle()
+    private function handle()
     {
         if (!empty($this->config['ignored_routes']) && is_array($this->config['ignored_routes'])) {
             $this->ignoredRoutes = array_merge($this->ignoredRoutes, $this->config['ignored_routes']);
@@ -103,7 +103,8 @@ class ExportRoutesCommand extends Command
         $routes = $this->router->getRoutes();
 
         foreach ($routes as $route) {
-            if (!in_array('api', $route->action['middleware'])) {
+
+            if(!$this->isApiRoute($route)){
                 continue;
             }
 
@@ -147,14 +148,27 @@ class ExportRoutesCommand extends Command
         $this->info('Path: ' . $this->fullPath);
     }
 
-    function isIgnoredRoute($route) {
+    private function isApiRoute($route) : bool
+    {
+        if(!isset($route->action['middleware'])){
+            return false;
+        }
+
+        if(!in_array('api', (array) $route->action['middleware'])){
+            return false;
+        }
+
+        return true;
+    }
+
+    private function isIgnoredRoute($route) {
         foreach ($this->ignoredRoutes as $ignoredRoute) {
             return (fnmatch($ignoredRoute, $route));
         }
         return false;
     }
 
-    public function createItemFromRoute($route, $controller = null) : array
+    private function createItemFromRoute($route, $controller = null) : array
     {
         [$controller, $method] = explode('@', $controller);
 
@@ -206,13 +220,15 @@ class ExportRoutesCommand extends Command
         return $item;
     }
 
-    public function checkIfControllerMethodHasFormRequest(string $controller, string $method)
+    private function checkIfControllerMethodHasFormRequest(string $controller, string $method)
     {
         $formRequest = null;
 
-        $controller = new $controller;
-
         $reflectionClass = new ReflectionClass($controller);
+
+        if(!$reflectionClass->hasMethod($method)) {
+            return null;
+        }
 
         $reflectionMethod = $reflectionClass->getMethod($method);
 
@@ -237,7 +253,7 @@ class ExportRoutesCommand extends Command
         return $formData;
     }
 
-    public function createFormDataFromFormRequest($formRequest)
+    private function createFormDataFromFormRequest($formRequest)
     {
         $formRequest = new $formRequest;
 
@@ -260,7 +276,7 @@ class ExportRoutesCommand extends Command
         return $formData;
     }
 
-    public function createPostmanStructure()
+    private function createPostmanStructure()
     {
         $port = $this->config['port'] != null ? ":" . $this->config['port'] : null;
 
@@ -281,12 +297,12 @@ class ExportRoutesCommand extends Command
         return $this->structure;
     }
 
-    public function mergeConfigIngoreList(): void
+    private function mergeConfigIngoreList(): void
     {
         $this->ignoredRoutes = array_merge($this->ignoredRoutes, $this->config['ignore_list']);
     }
 
-    public function exportJson(): void
+    private function exportJson(): void
     {
         $json = json_encode($this->structure, JSON_PRETTY_PRINT);
 
@@ -302,12 +318,12 @@ class ExportRoutesCommand extends Command
         fclose($file);
     }
 
-    public function addDirectoryToPostmanStructrue(): void
+    private function addDirectoryToPostmanStructrue(): void
     {
         $this->structure['item'] = $this->convertToPostmanItem($this->directory);
     }
 
-    public function directoryExists(string $routeUri): bool
+    private function directoryExists(string $routeUri): bool
     {
         $parts = explode('/', $routeUri);
         $current = $this->directory;
@@ -320,7 +336,7 @@ class ExportRoutesCommand extends Command
         return true;
     }
 
-    public function convertToPostmanItem($directory)
+    private function convertToPostmanItem($directory)
     {
         $items = [];
         foreach ($directory as $name => $item) {
@@ -337,7 +353,7 @@ class ExportRoutesCommand extends Command
         return $items;
     }
 
-    public function createDirectory(string $routeUri): array
+    private function createDirectory(string $routeUri): array
     {
         $parts = explode('/', $routeUri);
         $current = &$this->directory;
@@ -356,7 +372,7 @@ class ExportRoutesCommand extends Command
         return $current;
     }
 
-    public function getDirectory(string $routeUri): array
+    private function getDirectory(string $routeUri): array
     {
         foreach ($this->directory as $directory) {
             if ($directory['name'] == $routeUri) {
@@ -365,7 +381,7 @@ class ExportRoutesCommand extends Command
         }
     }
 
-    public function addToDirectory(string $routeUri, array $item, $directoryPath = null): void
+    private function addToDirectory(string $routeUri, array $item, $directoryPath = null): void
     {
         $parts = explode('/', $routeUri);
 
