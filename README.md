@@ -13,7 +13,7 @@ Install via composer
 ```bash
  composer require musti/laravel-postman
  ```
- Export config file
+ Publish configuration file
 ```bash
 php artisan vendor:publish --tag=laravel-postman-config
 ```
