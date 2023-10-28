@@ -27,7 +27,7 @@
             "email": "44943708+Musti132@users.noreply.github.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "extra": {
         "laravel": {
